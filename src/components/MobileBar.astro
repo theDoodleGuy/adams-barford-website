@@ -1,0 +1,8 @@
+---
+import { telHref } from '../lib/site';
+import PhoneIcon from './PhoneIcon.astro';
+---
+<div class="mobile-bar on-dark" role="region" aria-label="Quick contact">
+  <a class="btn btn--outline-light" href={telHref}><PhoneIcon /> Call us</a>
+  <a class="btn btn--primary" href="/contact/">Enquire</a>
+</div>

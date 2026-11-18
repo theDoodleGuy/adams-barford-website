@@ -1,0 +1,108 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ReviewsSection from '../../components/ReviewsSection.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getServices, getServiceLabels, getProjects, getReviews } from '../../lib/content';
+import { resolveImage } from '../../lib/image';
+import { phoneDisplay, telHref, settings, SITE_URL } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((service) => ({ params: { slug: service.id }, props: { service } }));
+}
+
+interface Props { service: CollectionEntry<'services'>; }
+const { service } = Astro.props;
+const { data } = service;
+const { Content } = await render(service);
+
+const labels = await getServiceLabels();
+const projects = (await getProjects()).filter((p) => p.data.service === service.id).slice(0, 3);
+const reviews = (await getReviews()).filter((r) => r.data.service === service.id).slice(0, 3);
+const enquireHref = `/contact/?type=${service.id}`;
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: data.title,
+  serviceType: data.navLabel,
+  description: data.summary,
+  url: `${SITE_URL}/services/${service.id}/`,
+  image: resolveImage(data.heroImage),
+  provider: { '@id': `${SITE_URL}/#business` },
+  areaServed: settings.areas.map((name) => ({ '@type': 'Place', name })),
+};
+---
+<BaseLayout title={data.seoTitle} description={data.summary} image={resolveImage(data.heroImage)} schema={[serviceSchema]}>
+  <PageHero
+    title={data.title}
+    lead={data.summary}
+    eyebrow={data.audience === 'business' ? 'For business' : 'For your home'}
+    crumbs={[{ href: '/services/', label: 'Services' }]}
+    image={data.heroImage}
+    imageAlt={data.heroAlt}
+  />
+
+  <section class="section">
+    <div class="container with-aside">
+      <div class="prose">
+        <Content />
+      </div>
+      <aside class="stack" aria-label={`${data.navLabel}: summary`}>
+        <div class="panel">
+          <h2>What's included</h2>
+          <ul class="tick-list mb-0">
+            {data.includes.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="panel panel--sand">
+          <h2>Talk to us about your project</h2>
+          <p>Free, no-obligation visit. We'll give you an honest view on what's possible.</p>
+          <div class="stack">
+            <a class="btn btn--primary" style="width: 100%" href={enquireHref}>Start your project</a>
+            <a class="btn btn--secondary" style="width: 100%" href={telHref}>Call {phoneDisplay}</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {data.gallery.length > 0 && (
+    <section class="section section--sand section--tight" aria-labelledby="gallery-title">
+      <div class="container">
+        <h2 id="gallery-title">{data.navLabel}: from our photo library</h2>
+        <ul class="gallery">
+          {data.gallery.map((g, i) => (
+            <li><Img src={g} alt={`${data.title}: example photo ${i + 1}`} sizes="(min-width: 900px) 380px, 100vw" widths={[400, 760]} /></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {projects.length > 0 && (
+    <section class="section" aria-labelledby="related-title">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <h2 id="related-title">{data.navLabel} projects</h2>
+          <a class="text-link" href={`/our-work/?service=${service.id}`}>See all {data.navLabel.toLowerCase()} work</a>
+        </div>
+        <div class="grid grid--3">
+          {projects.map((p) => <ProjectCard project={p} serviceLabel={labels[p.data.service]} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <ReviewsSection title="What customers say" reviews={reviews} labels={labels} sand />
+
+  <CtaBand
+    title={`Thinking about ${data.navLabel.toLowerCase()}?`}
+    lead="Tell us a little about your home and what you'd like to do. We'll get back to you to talk it through."
+    href={enquireHref}
+  />
+</BaseLayout>

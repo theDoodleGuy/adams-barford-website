@@ -1,0 +1,25 @@
+{
+  "businessName": "Adams & Barford",
+  "legalName": "Adams & Barford",
+  "tagline": "Family-run builders in Hythe since 1995",
+  "oneLiner": "Family-run builders in Hythe since 1995, building extensions, renovations, new homes and oak structures across the New Forest, the Waterside and Southampton.",
+  "founded": 1995,
+  "founders": ["Paul Adams", "Lyndsey Barford"],
+  "phone": "02380 193559",
+  "phoneE164": "+442380193559",
+  "email": "info@adamsandbarford.co.uk",
+  "address": {
+    "street": "1 Beech Crescent",
+    "locality": "Hythe",
+    "region": "Hampshire",
+    "postcode": "SO45 3QF",
+    "country": "GB"
+  },
+  "hours": "Monday to Friday, 8am to 5pm",
+  "hoursPlaceholder": true,
+  "responsePromise": "We reply to every enquiry within one working day.",
+  "responsePromisePlaceholder": true,
+  "areas": ["Hythe", "Dibden Purlieu", "Holbury", "Fawley", "Marchwood", "Totton", "Southampton", "Lyndhurst", "Brockenhurst", "Lymington", "Beaulieu", "Ringwood"],
+  "facebook": "",
+  "googleBusinessProfile": ""
+}

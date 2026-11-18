@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import copy from '../data/copy.json';
+import { phoneDisplay, telHref } from '../lib/site';
+
+const contact = copy.contact;
+---
+<BaseLayout title="Thank you | Adams & Barford" description={contact.thankYouText} noindex>
+  <PageHero title={contact.thankYouTitle} lead={contact.thankYouText}>
+    <div class="btn-row">
+      <a class="btn btn--primary" href={telHref}>Call {phoneDisplay}</a>
+      <a class="btn btn--secondary" href="/our-work/">See our work</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--sand">
+    <div class="container" style="max-width: 48rem">
+      <h2>{contact.nextStepsTitle}</h2>
+      <ol class="steps-list">
+        {contact.nextSteps.map((s) => <li>{s}</li>)}
+      </ol>
+      <p class="mt-6 mb-0">
+        In the meantime, you might like to read <a href="/about/#how-we-work">how we work</a> or
+        browse <a href="/our-work/">projects like yours</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

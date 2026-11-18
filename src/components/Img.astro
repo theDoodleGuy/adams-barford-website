@@ -1,0 +1,45 @@
+---
+// Responsive photo: Astro optimises it to WebP with a srcset at build time.
+// If the remote photo can't be fetched at build (staging host down), we fall back
+// to the original URL so the build never fails over a draft image.
+import { getImage } from 'astro:assets';
+import { resolveImage } from '../lib/image';
+
+interface Props {
+  src: string;              // ImageKey or path/URL
+  alt: string;
+  sizes?: string;
+  widths?: number[];
+  eager?: boolean;          // true for the above-the-fold (LCP) image only
+  class?: string;
+}
+
+const { src, alt, sizes = '(min-width: 1200px) 600px, 100vw', widths = [480, 800, 1200, 1600], eager = false, class: className } = Astro.props;
+const url = resolveImage(src);
+
+let out: { src: string; srcset?: string; width?: number; height?: number } = { src: url };
+try {
+  // `width` caps the fallback src (otherwise it is a full-size re-encode, sometimes bigger than the original).
+  const result = await getImage({ src: url, inferSize: true, width: Math.min(1200, Math.max(...widths)), widths, format: 'webp', quality: 72 });
+  out = {
+    src: result.src,
+    srcset: result.srcSet.attribute || undefined,
+    width: Number(result.attributes.width) || undefined,
+    height: Number(result.attributes.height) || undefined,
+  };
+} catch (err) {
+  console.warn(`[Img] could not optimise ${url}: ${(err as Error).message}`);
+}
+---
+<img
+  src={out.src}
+  srcset={out.srcset}
+  sizes={out.srcset ? sizes : undefined}
+  width={out.width}
+  height={out.height}
+  alt={alt}
+  class={className}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : undefined}
+  decoding={eager ? 'sync' : 'async'}
+/>

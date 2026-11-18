@@ -1,0 +1,141 @@
+{
+  "home": {
+    "heroEyebrow": "Family-run builders in Hythe since 1995",
+    "heroTitle": "Building work done properly, by people you'll get to know",
+    "heroLead": "Extensions, conversions, renovations, new homes and oak frames across the Waterside, the New Forest and Southampton. You'll see the same family and the same faces from the first visit to handover.",
+    "heroCtaPrimary": "Tell us about your project",
+    "heroCtaSecondary": "See our recent work",
+    "trustPoints": [
+      {
+        "title": "Family-run since 1995",
+        "text": "Started in Hythe by Paul Adams and Lyndsey Barford, and still run by the same family."
+      },
+      {
+        "title": "The same faces throughout",
+        "text": "No middlemen. You'll know who's arriving each morning and who to call."
+      },
+      {
+        "title": "Built around your home life",
+        "text": "Most of our customers stay at home while we work, so we plan for it from day one."
+      },
+      {
+        "title": "Grown by word of mouth",
+        "text": "Most of our work comes from people we've built for before, and their friends."
+      }
+    ],
+    "servicesTitle": "What we build",
+    "servicesLead": "From a new porch to a whole new house, we take on the work ourselves, with trusted local trades we've known for years.",
+    "differenceTitle": "What you can expect from us",
+    "differenceLead": "Building work means letting people into your home and trusting them with your savings. Here's how we look after both.",
+    "differencePoints": [
+      {
+        "title": "You'll know who's in your home",
+        "text": "The same family-run team works on your project from start to finish. One person is accountable for all of it, and you'll always know who to call."
+      },
+      {
+        "title": "You'll know what it costs",
+        "text": "You get a clear, itemised quote before we start. If anything changes on site, we explain the cost and agree it with you before we do the work."
+      },
+      {
+        "title": "Your home will be looked after",
+        "text": "We protect your floors, tidy up every day and keep your kitchen and bathroom working for as long as we can. It's your home, not just a site."
+      }
+    ],
+    "workTitle": "Recent projects",
+    "workLead": "A few of the homes and businesses we've worked on across the Waterside, the New Forest and Southampton.",
+    "reviewsTitle": "What our customers say",
+    "processTitle": "How a project works",
+    "processLead": "Building work can feel like a leap into the unknown. Here's what happens, step by step, so you always know what's next.",
+    "ctaTitle": "Thinking about building work?",
+    "ctaLead": "Tell us a little about your home and what you'd like to do. We'll get back to you to talk it through, with no pressure and no hard sell."
+  },
+  "process": [
+    {
+      "step": "1",
+      "title": "A quick chat",
+      "text": "Call us or send the form. We'll ask a few questions about your home and what you have in mind. It usually takes about 10 minutes."
+    },
+    {
+      "step": "2",
+      "title": "We visit your home",
+      "text": "We come and look at the space, talk through ideas and give you an honest view on what's possible, including what might need planning permission."
+    },
+    {
+      "step": "3",
+      "title": "Drawings and approvals",
+      "text": "We build from your plans or introduce you to a designer we trust. We help with planning and arrange Building Regulations approval."
+    },
+    {
+      "step": "4",
+      "title": "A clear, written quote",
+      "text": "You get an itemised quote so you can see where the money goes. Take your time to decide. We won't chase you."
+    },
+    {
+      "step": "5",
+      "title": "The build",
+      "text": "We agree a start date and plan the work around your household. The same team is on site throughout, and we keep you updated every week."
+    },
+    {
+      "step": "6",
+      "title": "Handover and aftercare",
+      "text": "We walk through everything with you, fix any snags and hand over your certificates. If something isn't right later, call us and we'll come back."
+    }
+  ],
+  "about": {
+    "title": "A family firm from Hythe, since 1995",
+    "lead": "We're Adams & Barford. We've been building homes, extensions and conversions across the Waterside, the New Forest and Southampton since 1995, and we're still the same family.",
+    "storyTitle": "Our story",
+    "story": "Paul Adams and Lyndsey Barford started Adams & Barford in Hythe in 1995. From the beginning, the idea was simple: do the work properly, treat people's homes with respect, and be someone customers would happily recommend to a friend.\n\nThat's how we've grown ever since. For most of our history we haven't advertised at all. Our work has come from word of mouth: people we've built for before, and their friends, family and neighbours. One customer has worked with us on four different properties. That means more to us than any advert.\n\nWe've specialised in home refurbishments, extensions, and loft and garage conversions, and over time we've added new homes, oak-framed buildings and commercial work. What hasn't changed is how we work. We're still family-run, and you'll see the same faces from the first visit to the day we hand over. You won't be passed between a salesperson, a project manager and a string of strangers. You'll deal with people you get to know, who are accountable for the whole job.\n\nMost of our customers stay at home while we build, so we've become experts at working around family life. That means keeping a kitchen running, tidying up every day, and telling you what's happening before it happens.\n\nWe're still based in Hythe, and most of our work is within a short drive of home, across the Waterside, the New Forest and Southampton.",
+    "teamTitle": "The people you'll see on site",
+    "teamLead": "Our own team does the work, alongside trusted local trades we've worked with for years. Names and photos of the team are coming soon.",
+    "values": [
+      {
+        "title": "Same faces, start to finish",
+        "text": "You'll know who's arriving each morning and who to call. One family, one team, accountable for the whole job."
+      },
+      {
+        "title": "Straight about money",
+        "text": "Clear, itemised quotes. If something changes once we've started, we explain the cost and agree it with you first. No surprises on the final bill."
+      },
+      {
+        "title": "Your home, treated like our own",
+        "text": "We protect your floors, tidy up every day and plan the work around your family, because you're living there too."
+      },
+      {
+        "title": "We stand behind our work",
+        "text": "Since 1995, most of our work has come from people who've used us before or been recommended. We want to keep it that way, so if something isn't right, we come back and fix it."
+      }
+    ],
+    "accreditationsTitle": "Insurance, guarantees and memberships",
+    "accreditationsText": "Details of our insurance cover, workmanship guarantee and trade memberships are being confirmed and will be added here shortly. In the meantime, just ask and we'll happily send you copies of our certificates."
+  },
+  "areas": {
+    "title": "Where we work",
+    "lead": "We're based in Hythe and build across the Waterside, the New Forest and Southampton.",
+    "body": "Hythe has been home since 1995, and most of our work is within a short drive of it. That means we can be on site early, pop back quickly if something needs a look, and we already know many of the local roads, planners and suppliers.\n\n## The Waterside\n\nHythe, Dibden Purlieu, Holbury, Fawley and Marchwood are on our doorstep. A lot of our customers here found us through a neighbour, and some of them we've built for more than once.\n\n## The New Forest\n\nWe work across the Forest, including Lyndhurst, Brockenhurst, Beaulieu, Lymington and Ringwood. Building inside the New Forest National Park has its own rules. Planning is handled by the National Park Authority, and it looks closely at size, design and materials. We'll help you understand what's likely to be possible before you spend money on drawings.\n\n## Southampton and Totton\n\nFrom Totton to the city, we build extensions, loft and garage conversions and renovations on all kinds of homes. We also carry out commercial refurbishments for local businesses.\n\nNot sure if you're in our area? Get in touch anyway. We'll tell you honestly whether we can take your project on."
+  },
+  "contact": {
+    "title": "Tell us about your project",
+    "lead": "Whether it's a big build or you just want some advice, we're happy to talk it through. There's no obligation and no hard sell.",
+    "formIntro": "A few details help us prepare before we call you back. If you're not sure about something, leave it blank and we'll talk it through.",
+    "nextStepsTitle": "What happens next",
+    "nextSteps": [
+      "We'll get back to you to chat through your project. It usually takes about 10 minutes.",
+      "We'll visit your home to look at the space, talk through ideas and answer your questions.",
+      "You'll get a clear, written quote, itemised so you can see where the money goes. Then you decide, in your own time."
+    ],
+    "thankYouTitle": "Thanks, we've got your enquiry",
+    "thankYouText": "We'll be in touch soon to talk through your project and arrange a visit. If it's urgent, you're welcome to call us in the meantime."
+  },
+  "servicesHub": {
+    "title": "What we build",
+    "lead": "Extensions, conversions, renovations, new homes, oak frames and commercial work across the Waterside, the New Forest and Southampton, all from one family-run team."
+  },
+  "workHub": {
+    "title": "Our work",
+    "lead": "A selection of projects from across the Waterside, the New Forest and Southampton. We're always happy to share more photos, or put you in touch with past customers."
+  },
+  "footer": {
+    "blurb": "Family-run builders in Hythe since 1995. Extensions, conversions, renovations, new homes and oak frames across the Waterside, the New Forest and Southampton."
+  }
+}

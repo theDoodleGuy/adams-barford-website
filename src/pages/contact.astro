@@ -1,0 +1,267 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import copy from '../data/copy.json';
+import { settings, phoneDisplay, telHref, mailHref, addressLines } from '../lib/site';
+import { getServices } from '../lib/content';
+
+const contact = copy.contact;
+const services = await getServices();
+
+const budgets = ['Under £25k', '£25k to £50k', '£50k to £100k', '£100k to £250k', '£250k+', 'Not sure yet'];
+const timescales = ['As soon as possible', 'In 1 to 3 months', 'In 3 to 6 months', 'More than 6 months away', 'Just exploring for now'];
+---
+<BaseLayout
+  title="Contact Adams & Barford | Start Your Building Project"
+  description={`${contact.lead} Call ${phoneDisplay} or send us a few details about your project.`}
+>
+  <PageHero title={contact.title} lead={contact.lead} />
+
+  <section class="section" style="padding-top: 0">
+    <div class="container with-aside">
+      <div>
+        <p>{contact.formIntro}</p>
+        <p class="hint">Fields marked <span aria-hidden="true">*</span><span class="visually-hidden">with an asterisk</span> are required.</p>
+
+        <!--
+          DRAFT FORM HANDLING: this posts straight to /thank-you/ and carries Netlify Forms attributes.
+          Before launch it moves to either Netlify Forms (if hosted there) or a Cloudflare Worker that
+          verifies a Cloudflare Turnstile token, checks the honeypot, sends the enquiry to info@ and
+          redirects to /thank-you/. Never a puzzle CAPTCHA (review finding C1 / privacy report).
+        -->
+        <form
+          class="form"
+          method="POST"
+          action="/thank-you/"
+          name="enquiry"
+          data-netlify="true"
+          data-netlify-honeypot="company_website"
+          data-enquiry-form
+          data-preview={import.meta.env.BASE_URL !== '/' ? import.meta.env.BASE_URL : undefined}
+        >
+          <input type="hidden" name="form-name" value="enquiry" />
+
+          <div class="error-summary" tabindex="-1" data-error-summary hidden>
+            <h2>Please check the form</h2>
+            <ul data-error-list></ul>
+          </div>
+
+          <!-- Honeypot: hidden from people and screen readers; bots that fill it are dropped. -->
+          <div class="honeypot" aria-hidden="true">
+            <label for="company_website">Leave this field empty</label>
+            <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="form__row form__row--2">
+            <div class="field">
+              <label for="name">Your name <span aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="name" name="name" autocomplete="name" required aria-describedby="name-error" />
+              <p class="error-msg" id="name-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="postcode">Postcode of the property <span aria-hidden="true">*</span></label>
+              <input class="input" type="text" id="postcode" name="postcode" autocomplete="postal-code" autocapitalize="characters" required aria-describedby="postcode-hint postcode-error" />
+              <p class="hint" id="postcode-hint">So we can check it's in our area.</p>
+              <p class="error-msg" id="postcode-error" hidden></p>
+            </div>
+          </div>
+
+          <div class="form__row form__row--2">
+            <div class="field">
+              <label for="email">Email <span aria-hidden="true">*</span></label>
+              <input class="input" type="email" id="email" name="email" autocomplete="email" required aria-describedby="email-error" />
+              <p class="error-msg" id="email-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="optional">(optional)</span></label>
+              <input class="input" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error" />
+              <p class="hint" id="phone-hint">Needed if you'd like us to call.</p>
+              <p class="error-msg" id="phone-error" hidden></p>
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend>How would you like us to get in touch?</legend>
+            <div class="choice-group">
+              <label class="choice"><input type="radio" name="contact_method" value="Phone" /><span>Phone</span></label>
+              <label class="choice"><input type="radio" name="contact_method" value="Email" /><span>Email</span></label>
+              <label class="choice"><input type="radio" name="contact_method" value="Either" checked /><span>Either is fine</span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="project_type">What kind of project? <span aria-hidden="true">*</span></label>
+            <select class="select" id="project_type" name="project_type" required aria-describedby="project_type-error">
+              <option value="">Choose one</option>
+              {services.map((s) => <option value={s.id}>{s.data.navLabel}</option>)}
+              <option value="other">Something else</option>
+            </select>
+            <p class="error-msg" id="project_type-error" hidden></p>
+          </div>
+
+          <div class="form__row form__row--2">
+            <div class="field">
+              <label for="budget">Rough budget <span class="optional">(optional)</span></label>
+              <select class="select" id="budget" name="budget" aria-describedby="budget-hint">
+                <option value="">Prefer not to say</option>
+                {budgets.map((b) => <option>{b}</option>)}
+              </select>
+              <p class="hint" id="budget-hint">"Not sure yet" is a perfectly good answer.</p>
+            </div>
+            <div class="field">
+              <label for="timescale">When would you like to start? <span class="optional">(optional)</span></label>
+              <select class="select" id="timescale" name="timescale">
+                <option value="">Not sure</option>
+                {timescales.map((t) => <option>{t}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Tell us about your project <span class="optional">(optional)</span></label>
+            <textarea class="textarea" id="message" name="message" rows="6" aria-describedby="message-hint"></textarea>
+            <p class="hint" id="message-hint">For example: "A single-storey kitchen extension at the back, about 4 metres deep."</p>
+          </div>
+
+          <p class="consent">
+            We'll only use your details to reply to your enquiry. See our <a href="/privacy/">privacy notice</a>.
+          </p>
+
+          <div>
+            <button class="btn btn--primary" type="submit">Send my enquiry</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="stack" aria-label="Other ways to contact us">
+        <div class="panel">
+          <h2>Talk to us</h2>
+          <ul class="contact-list">
+            <li><strong>Phone</strong><a href={telHref}>{phoneDisplay}</a></li>
+            <li><strong>Email</strong><a href={mailHref}>{settings.email}</a></li>
+            <li>
+              <strong>Address</strong>
+              <address style="font-style: normal">{addressLines.map((l) => <>{l}<br /></>)}</address>
+            </li>
+            <li>
+              <strong>Office hours</strong>
+              {settings.hours}
+              {settings.hoursPlaceholder && <span class="draft-tag" style="margin-left: var(--sp-2)">[to confirm]</span>}
+            </li>
+          </ul>
+          <p class="hint" style="margin-top: var(--sp-4)">
+            {settings.responsePromise}
+            {settings.responsePromisePlaceholder && <span class="draft-tag" style="margin-left: var(--sp-2)">[to confirm]</span>}
+            If we're on site when you call, leave a message and we'll ring you back.
+          </p>
+        </div>
+        <div class="panel panel--sand">
+          <h2>{contact.nextStepsTitle}</h2>
+          <ol class="steps-list">
+            {contact.nextSteps.map((s) => <li>{s}</li>)}
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Validation polish on top of native HTML validation: plain-language messages,
+  // inline errors linked by aria-describedby, and an error summary that takes focus on submit.
+  const form = document.querySelector<HTMLFormElement>('[data-enquiry-form]');
+
+  if (form) {
+    form.noValidate = true;
+    const summary = form.querySelector<HTMLElement>('[data-error-summary]')!;
+    const list = form.querySelector<HTMLElement>('[data-error-list]')!;
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+
+    // Pre-select the project type from service and project pages (/contact/?type=extensions).
+    const type = new URLSearchParams(location.search).get('type');
+    const select = field('project_type') as HTMLSelectElement | null;
+    if (type && select && [...select.options].some((o) => o.value === type)) select.value = type;
+
+    const rules: Record<string, () => string> = {
+      name: () => (field('name')!.value.trim() ? '' : 'Please tell us your name.'),
+      email: () => {
+        const v = field('email')!.value.trim();
+        if (!v) return 'Please add your email address so we can reply.';
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'That email address doesn’t look quite right. Please check it.';
+      },
+      phone: () => {
+        const v = field('phone')!.value.trim();
+        const method = (form.querySelector('input[name="contact_method"]:checked') as HTMLInputElement | null)?.value;
+        if (!v && method === 'Phone') return 'Please add a phone number so we can call you.';
+        if (v && v.replace(/[^\d]/g, '').length < 10) return 'That phone number looks too short. Please check it.';
+        return '';
+      },
+      postcode: () => (field('postcode')!.value.trim() ? '' : 'Please add the postcode of the property.'),
+      project_type: () => (field('project_type')!.value ? '' : 'Please choose the kind of project, or “Something else”.'),
+    };
+
+    const show = (name: string, message: string) => {
+      const input = field(name)!;
+      const error = document.getElementById(`${name}-error`)!;
+      error.textContent = message;
+      error.hidden = !message;
+      input.setAttribute('aria-invalid', String(Boolean(message)));
+      input.closest('.field')?.classList.toggle('field--error', Boolean(message));
+    };
+
+    const check = (name: string) => {
+      const message = rules[name]();
+      show(name, message);
+      return message;
+    };
+
+    // Validate on blur only after the person has typed something, so we don't nag on first tab-through.
+    Object.keys(rules).forEach((name) => {
+      const input = field(name);
+      input?.addEventListener('blur', () => {
+        if (input.value || input.getAttribute('aria-invalid') === 'true') check(name);
+      });
+      input?.addEventListener('input', () => {
+        if (input.getAttribute('aria-invalid') === 'true') check(name);
+      });
+    });
+    form.querySelectorAll('input[name="contact_method"]').forEach((r) =>
+      r.addEventListener('change', () => {
+        if (field('phone')!.getAttribute('aria-invalid') === 'true') check('phone');
+      }),
+    );
+
+    form.addEventListener('submit', (e) => {
+      const errors = Object.keys(rules)
+        .map((name) => ({ name, message: check(name) }))
+        .filter((r) => r.message);
+      if (!errors.length) {
+        summary.hidden = true;
+        // Client preview (GitHub Pages): nothing is sent, just show the thank-you page.
+        const previewBase = form.getAttribute('data-preview');
+        if (previewBase) {
+          e.preventDefault();
+          window.location.href = `${previewBase.replace(/\/?$/, '/')}thank-you/`;
+        }
+        return;
+      }
+      e.preventDefault();
+      list.replaceChildren(
+        ...errors.map(({ name, message }) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `#${name}`;
+          a.textContent = message;
+          a.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            field(name)?.focus();
+          });
+          li.append(a);
+          return li;
+        }),
+      );
+      summary.hidden = false;
+      summary.focus();
+    });
+  }
+</script>

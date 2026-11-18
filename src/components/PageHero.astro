@@ -1,0 +1,32 @@
+---
+import Img from './Img.astro';
+
+interface Crumb { href: string; label: string; }
+interface Props {
+  title: string;
+  lead?: string;
+  eyebrow?: string;
+  crumbs?: Crumb[];     // ancestors only; the current page is added automatically
+  image?: string;
+  imageAlt?: string;
+}
+const { title, lead, eyebrow, crumbs = [], image, imageAlt = '' } = Astro.props;
+---
+<section class:list={['page-hero', { 'page-hero--media': image }]}>
+  <div class="container">
+    {crumbs.length > 0 && (
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          {crumbs.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+          <li><span aria-current="page">{title}</span></li>
+        </ol>
+      </nav>
+    )}
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+    {image && <Img src={image} alt={imageAlt} eager class="page-hero__img" sizes="(min-width: 1240px) 1200px, 100vw" />}
+  </div>
+</section>

@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { phoneDisplay, telHref } from '../lib/site';
+import { getServices } from '../lib/content';
+
+const services = await getServices();
+---
+<BaseLayout title="Page not found | Adams & Barford" description="Sorry, we couldn't find that page." noindex>
+  <PageHero
+    title="Sorry, we can't find that page"
+    lead="It may have moved when we rebuilt the website. These links should get you back on track."
+  >
+    <div class="btn-row">
+      <a class="btn btn--primary" href="/">Go to the home page</a>
+      <a class="btn btn--secondary" href={telHref}>Call {phoneDisplay}</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--sand section--tight">
+    <div class="container grid grid--2">
+      <div>
+        <h2>Our services</h2>
+        <ul>
+          {services.map((s) => <li><a href={`/services/${s.id}/`}>{s.data.title}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Other pages</h2>
+        <ul>
+          <li><a href="/our-work/">Our work</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/areas/">Areas we cover</a></li>
+          <li><a href="/contact/">Start your project</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

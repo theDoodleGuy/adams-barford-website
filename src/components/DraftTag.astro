@@ -1,0 +1,6 @@
+---
+// Marks invented draft content (placeholder: true) so nobody mistakes it for a real project or review.
+interface Props { label?: string; class?: string; }
+const { label = 'Draft example', class: className } = Astro.props;
+---
+<span class:list={['draft-tag', className]} title="Placeholder content, to be replaced before launch">{label}</span>

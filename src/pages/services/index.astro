@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import ProcessSteps from '../../components/ProcessSteps.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import copy from '../../data/copy.json';
+import { getServices } from '../../lib/content';
+
+const services = await getServices();
+const home = services.filter((s) => s.data.audience === 'home');
+const business = services.filter((s) => s.data.audience === 'business');
+---
+<BaseLayout
+  title="Building Services in Hythe, Southampton & the New Forest | Adams & Barford"
+  description={copy.servicesHub.lead}
+>
+  <PageHero title={copy.servicesHub.title} lead={copy.servicesHub.lead} crumbs={[]} />
+
+  <section class="section" style="padding-top: 0" aria-labelledby="home-services">
+    <div class="container">
+      <h2 id="home-services">For your home</h2>
+      <div class="grid grid--3">
+        {home.map((s) => <ServiceCard service={s} />)}
+      </div>
+
+      {business.length > 0 && (
+        <>
+          <h2 id="business-services" class="mt-6" style="margin-top: var(--sp-8)">For business</h2>
+          <div class="grid grid--3">
+            {business.map((s) => <ServiceCard service={s} />)}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="process-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="process-title">{copy.home.processTitle}</h2>
+        <p class="lead mb-0">{copy.home.processLead}</p>
+      </div>
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

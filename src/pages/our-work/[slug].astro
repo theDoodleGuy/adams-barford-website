@@ -1,0 +1,106 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import DraftTag from '../../components/DraftTag.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getProjects, getServiceLabels } from '../../lib/content';
+import { resolveImage } from '../../lib/image';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+const labels = await getServiceLabels();
+const serviceLabel = labels[data.service] ?? data.service;
+const others = (await getProjects()).filter((p) => p.id !== project.id && p.data.service === data.service).slice(0, 3);
+const more = others.length ? others : (await getProjects()).filter((p) => p.id !== project.id).slice(0, 3);
+---
+<BaseLayout
+  title={`${data.title} | Adams & Barford`}
+  description={data.summary}
+  image={resolveImage(data.heroImage)}
+  type="article"
+>
+  <PageHero
+    title={data.title}
+    lead={data.summary}
+    eyebrow={`${serviceLabel} · ${data.town}`}
+    crumbs={[{ href: '/our-work/', label: 'Our work' }]}
+    image={data.heroImage}
+    imageAlt={data.heroAlt}
+  >
+    {data.placeholder && <p><DraftTag label="Draft example: not a real project yet" /></p>}
+  </PageHero>
+
+  <section class="section">
+    <div class="container with-aside">
+      <div class="prose">
+        <Content />
+        {data.quote && (
+          <figure class="pull-quote">
+            <blockquote><p class="mb-0">{data.quote}</p></blockquote>
+            {data.quoteName && <figcaption>{data.quoteName}</figcaption>}
+          </figure>
+        )}
+      </div>
+      <aside class="stack" aria-label="Project details">
+        <div class="panel">
+          <h2>Project details</h2>
+          <dl class="facts">
+            <dt>Service</dt><dd><a href={`/services/${data.service}/`}>{serviceLabel}</a></dd>
+            <dt>Location</dt><dd>{data.town}</dd>
+            {data.duration && <><dt>Time on site</dt><dd>{data.duration}</dd></>}
+            {data.budgetBand && <><dt>Budget</dt><dd>{data.budgetBand}</dd></>}
+            {data.year && <><dt>Completed</dt><dd>{data.year}</dd></>}
+          </dl>
+        </div>
+        <div class="panel panel--sand">
+          <h2>Planning something similar?</h2>
+          <p>We'd be glad to come and have a look.</p>
+          <a class="btn btn--primary" style="width: 100%" href={`/contact/?type=${data.service}`}>Start your project</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {data.gallery.length > 0 && (
+    <section class="section section--sand section--tight" aria-labelledby="gallery-title">
+      <div class="container">
+        <h2 id="gallery-title">Photos</h2>
+        <ul class="gallery">
+          {data.gallery.map((g) => (
+            <li>
+              <figure>
+                <Img src={g.src} alt={g.alt} sizes="(min-width: 900px) 380px, 100vw" widths={[400, 760, 1200]} />
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {more.length > 0 && (
+    <section class="section" aria-labelledby="more-title">
+      <div class="container">
+        <div class="section-head section-head--split">
+          <h2 id="more-title">More of our work</h2>
+          <a class="text-link" href="/our-work/">See all projects</a>
+        </div>
+        <div class="grid grid--3">
+          {more.map((p) => <ProjectCard project={p} serviceLabel={labels[p.data.service]} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CtaBand href={`/contact/?type=${data.service}`} />
+</BaseLayout>

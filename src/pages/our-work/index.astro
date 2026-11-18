@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import copy from '../../data/copy.json';
+import { getServices, getServiceLabels, getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+const labels = await getServiceLabels();
+// Only offer filters for services that actually have projects.
+const filters = (await getServices()).filter((s) => projects.some((p) => p.data.service === s.id));
+const anyPlaceholder = projects.some((p) => p.data.placeholder);
+---
+<BaseLayout
+  title="Our Work: Extensions, Renovations & New Homes | Adams & Barford"
+  description={copy.workHub.lead}
+>
+  <PageHero title={copy.workHub.title} lead={copy.workHub.lead} />
+
+  <section class="section" style="padding-top: 0" aria-label="Projects">
+    <div class="container">
+      {anyPlaceholder && (
+        <p class="draft-note" role="note">
+          <strong>Draft site.</strong> Projects marked "Draft example" are illustrations written for the draft and will be
+          replaced with real Adams &amp; Barford projects before launch.
+        </p>
+      )}
+
+      <!-- Progressive enhancement: the filter stays hidden until the script runs; without JS every project shows. -->
+      <div class="filter" data-filter hidden>
+        <span class="filter__label" id="filter-label">Show projects by service</span>
+        <ul class="filter__options" role="list" aria-labelledby="filter-label">
+          <li><button type="button" class="filter__btn" data-value="all" aria-pressed="true">All projects</button></li>
+          {filters.map((s) => (
+            <li><button type="button" class="filter__btn" data-value={s.id} aria-pressed="false">{s.data.navLabel}</button></li>
+          ))}
+        </ul>
+        <p class="filter__status" role="status" aria-live="polite" data-filter-status></p>
+      </div>
+
+      <div class="grid grid--3" data-projects>
+        {projects.map((p) => <ProjectCard project={p} serviceLabel={labels[p.data.service]} headingLevel="h2" />)}
+      </div>
+
+      <div class="empty-state" data-empty hidden>
+        <p class="mb-0">
+          We haven't added any of these projects yet. <a href="/our-work/">See all our work</a> or
+          <a href="/contact/">tell us about yours</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-filter]');
+  const grid = document.querySelector<HTMLElement>('[data-projects]');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+
+  if (root && grid) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('.filter__btn')];
+    const cards = [...grid.querySelectorAll<HTMLElement>('[data-service]')];
+
+    const apply = (value: string, updateUrl = true) => {
+      if (!buttons.some((b) => b.dataset.value === value)) value = 'all';
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.value === value)));
+      let shown = 0;
+      cards.forEach((card) => {
+        const match = value === 'all' || card.dataset.service === value;
+        card.hidden = !match;
+        if (match) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+      if (status) status.textContent = `Showing ${shown} ${shown === 1 ? 'project' : 'projects'}`;
+      if (updateUrl) {
+        const url = new URL(location.href);
+        if (value === 'all') url.searchParams.delete('service');
+        else url.searchParams.set('service', value);
+        history.replaceState(null, '', url);
+      }
+    };
+
+    buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.value ?? 'all')));
+    root.hidden = false;
+    // Deep links such as /our-work/?service=extensions (used by service pages and the thank-you page).
+    apply(new URLSearchParams(location.search).get('service') ?? 'all', false);
+  }
+</script>

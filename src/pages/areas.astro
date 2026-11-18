@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import CtaBand from '../components/CtaBand.astro';
+import copy from '../data/copy.json';
+import { settings } from '../lib/site';
+import { md } from '../lib/format';
+---
+<BaseLayout
+  title="Areas We Cover: Hythe, the Waterside, New Forest & Southampton | Adams & Barford"
+  description={`${copy.areas.lead} Including ${settings.areas.slice(0, 8).join(', ')} and nearby.`}
+>
+  <PageHero title={copy.areas.title} lead={copy.areas.lead} />
+
+  <section class="section" style="padding-top: 0">
+    <div class="container split" style="align-items: start">
+      <div class="prose">
+        <Fragment set:html={md(copy.areas.body)} />
+      </div>
+      <div class="stack sticky-lg">
+        <div class="panel">
+          <h2>Towns and villages we often work in</h2>
+          <ul class="areas-list">
+            {settings.areas.map((a) => <li>{a}</li>)}
+          </ul>
+        </div>
+        <Img src="shoot069" alt="Two Adams & Barford vans parked on the drive of a newly built brick house" sizes="(min-width: 900px) 560px, 100vw" class="photo" />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Not sure if you're in our area?" lead="Get in touch anyway. We'll tell you honestly whether we can take your project on." />
+</BaseLayout>

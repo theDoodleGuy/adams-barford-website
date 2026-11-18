@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import { img } from '../data/images';
+import { phoneDisplay, telHref } from '../lib/site';
+import PhoneIcon from './PhoneIcon.astro';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (path === href ? 'page' : path.startsWith(href) ? 'true' : undefined);
+
+const links = [
+  { href: '/our-work/', label: 'Our Work' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Adams & Barford, home">
+      <img src={img('logo')} alt="" width="305" height="91" />
+    </a>
+
+    <a class="header-phone" href={telHref}>
+      <PhoneIcon />
+      <span><span class="visually-hidden">Call us on </span>{phoneDisplay}</span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle__bars" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li class="nav-services">
+          <a class="nav-services__link" href="/services/" aria-current={isCurrent('/services/')}>Services</a>
+          {services.length > 0 && (
+            <>
+              <button class="subnav-toggle" type="button" aria-expanded="false" aria-controls="subnav-services">
+                <span class="visually-hidden">Show all services</span>
+                <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+              </button>
+              <ul class="subnav" id="subnav-services">
+                {services.map((s) => (
+                  <li><a href={`/services/${s.id}/`} aria-current={path === `/services/${s.id}/` ? 'page' : undefined}>{s.data.navLabel}</a></li>
+                ))}
+              </ul>
+            </>
+          )}
+        </li>
+        {links.map((l) => (
+          <li><a href={l.href} aria-current={isCurrent(l.href)}>{l.label}</a></li>
+        ))}
+      </ul>
+      <div class="nav-actions">
+        <a class="btn btn--secondary nav-phone" href={telHref}><PhoneIcon /> <span class="nav-phone__label">Call</span> {phoneDisplay}</a>
+        <a class="btn btn--primary" href="/contact/">Start your project</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Mobile menu + services dropdown: disclosure buttons with aria-expanded.
+  // Esc closes whatever is open and returns focus to its button.
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const nav = document.getElementById('site-nav');
+  const subToggle = document.querySelector<HTMLButtonElement>('.subnav-toggle');
+  const subnav = document.getElementById('subnav-services');
+
+  const setMenu = (open: boolean) => {
+    toggle?.setAttribute('aria-expanded', String(open));
+    nav?.classList.toggle('is-open', open);
+  };
+  const setSub = (open: boolean) => {
+    subToggle?.setAttribute('aria-expanded', String(open));
+    subnav?.classList.toggle('is-open', open);
+  };
+
+  toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  subToggle?.addEventListener('click', () => setSub(subToggle.getAttribute('aria-expanded') !== 'true'));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (subToggle?.getAttribute('aria-expanded') === 'true') {
+      setSub(false);
+      subToggle.focus();
+    } else if (toggle?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+
+  // Close the desktop dropdown when focus or a click moves elsewhere.
+  document.addEventListener('click', (e) => {
+    const holder = subToggle?.closest('.nav-services');
+    if (holder && !holder.contains(e.target as Node) && window.matchMedia('(min-width: 1024px)').matches) setSub(false);
+  });
+  subnav?.addEventListener('focusout', (e) => {
+    const holder = subToggle?.closest('.nav-services');
+    if (holder && !holder.contains(e.relatedTarget as Node) && window.matchMedia('(min-width: 1024px)').matches) setSub(false);
+  });
+</script>

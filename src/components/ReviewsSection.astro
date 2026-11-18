@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ReviewCard from './ReviewCard.astro';
+
+interface Props {
+  title: string;
+  reviews: CollectionEntry<'reviews'>[];
+  labels: Record<string, string>;
+  sand?: boolean;
+}
+const { title, reviews, labels, sand = false } = Astro.props;
+const anyPlaceholder = reviews.some((r) => r.data.placeholder);
+---
+{reviews.length > 0 && (
+  <section class:list={['section', { 'section--sand': sand }]} aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="reviews-title">{title}</h2>
+        {anyPlaceholder && (
+          <p class="draft-note" role="note">
+            <strong>Sample reviews.</strong> These are placeholders written for the draft site. They'll be replaced with
+            real reviews, with their source, before launch.
+          </p>
+        )}
+      </div>
+      <div class="grid grid--3">
+        {reviews.map((r) => <ReviewCard review={r} serviceLabel={labels[r.data.service]} />)}
+      </div>
+    </div>
+  </section>
+)}

@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Img from './Img.astro';
+
+interface Props { service: CollectionEntry<'services'>; headingLevel?: 'h2' | 'h3'; }
+const { service, headingLevel: H = 'h3' } = Astro.props;
+const { data } = service;
+---
+<article class="card">
+  <div class="card__media">
+    <Img src={data.heroImage} alt="" sizes="(min-width: 1200px) 380px, (min-width: 700px) 45vw, 100vw" widths={[400, 760]} />
+  </div>
+  <div class="card__body">
+    <H class="card__title"><a href={`/services/${service.id}/`}>{data.title}</a></H>
+    <p class="card__text">{data.summary}</p>
+    <span class="card__more" aria-hidden="true">Explore {data.navLabel.toLowerCase()} →</span>
+  </div>
+</article>

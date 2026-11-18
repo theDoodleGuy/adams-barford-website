@@ -1,0 +1,112 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import CtaBand from '../components/CtaBand.astro';
+import copy from '../data/copy.json';
+import { img } from '../data/images';
+import { md, mdToText } from '../lib/format';
+import { faqCategoryLabels } from '../lib/content';
+
+const about = copy.about;
+const faqs = (await getCollection('faqs')).sort((a, b) => a.data.order - b.data.order);
+const faqItems = await Promise.all(faqs.map(async (f) => ({ entry: f, Content: (await render(f)).Content })));
+const groups = (Object.keys(faqCategoryLabels) as (keyof typeof faqCategoryLabels)[])
+  .map((cat) => ({ cat, label: faqCategoryLabels[cat], items: faqItems.filter((f) => f.entry.data.category === cat) }))
+  .filter((g) => g.items.length);
+const anyFaqPlaceholder = faqs.some((f) => f.data.placeholder);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.data.question,
+    acceptedAnswer: { '@type': 'Answer', text: mdToText(f.body ?? '') },
+  })),
+};
+---
+<BaseLayout
+  title="About Adams & Barford | Family Builders in Hythe since 1995"
+  description={about.lead}
+  image={img('shoot041')}
+  schema={faqs.length ? [faqSchema] : []}
+>
+  <PageHero title={about.title} lead={about.lead} image="shoot001" imageAlt="A new brick house with a tiled roof and timber porch, with an Adams & Barford van parked outside" />
+
+  <section class="section" aria-labelledby="story-title">
+    <div class="container split" style="align-items: start">
+      <div class="prose">
+        <h2 id="story-title">{about.storyTitle}</h2>
+        <Fragment set:html={md(about.story)} />
+      </div>
+      <div class="sticky-lg">
+        <Img src="shoot041" alt="Members of the Adams & Barford team sharing a joke in their Hythe office" sizes="(min-width: 900px) 560px, 100vw" class="photo" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="team-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="team-title">{about.teamTitle}</h2>
+        <p class="lead mb-0">{about.teamLead}</p>
+      </div>
+      <ul class="values">
+        {about.values.map((v) => (
+          <li>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="how-we-work" aria-labelledby="process-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="process-title">How we work</h2>
+        <p class="lead mb-0">{copy.home.processLead}</p>
+      </div>
+      <ProcessSteps />
+    </div>
+  </section>
+
+  <section class="section section--sand section--tight" id="accreditations" aria-labelledby="acc-title">
+    <div class="container">
+      <div class="panel" style="max-width: 48rem">
+        <h2 id="acc-title">{about.accreditationsTitle}</h2>
+        <p class="mb-0">{about.accreditationsText}</p>
+      </div>
+    </div>
+  </section>
+
+  {faqs.length > 0 && (
+    <section class="section" id="faqs" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="faq-title">Questions people often ask</h2>
+          {anyFaqPlaceholder && (
+            <p class="draft-note" role="note"><strong>Draft answers.</strong> Some figures and details are still to be confirmed with the owner.</p>
+          )}
+        </div>
+        {groups.map((g) => (
+          <div class="faq-group">
+            <h3>{g.label}</h3>
+            {g.items.map(({ entry, Content }) => (
+              <details class="faq">
+                <summary>{entry.data.question}</summary>
+                <div class="faq__answer prose"><Content /></div>
+              </details>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <CtaBand />
+</BaseLayout>

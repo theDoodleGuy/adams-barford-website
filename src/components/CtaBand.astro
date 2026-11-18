@@ -1,0 +1,35 @@
+---
+import copy from '../data/copy.json';
+import { phoneDisplay, telHref, settings } from '../lib/site';
+
+interface Props {
+  title?: string;
+  lead?: string;
+  href?: string;        // e.g. /contact/?type=extensions to pre-select the project type
+  buttonLabel?: string;
+}
+const {
+  title = copy.home.ctaTitle,
+  lead = copy.home.ctaLead,
+  href = '/contact/',
+  buttonLabel = 'Start your project',
+} = Astro.props;
+---
+<section class="section section--dark cta-band" aria-labelledby="cta-title">
+  <div class="container cta-band__inner">
+    <div>
+      <h2 id="cta-title">{title}</h2>
+      <p class="lead mb-0">{lead}</p>
+    </div>
+    <div>
+      <div class="btn-row">
+        <a class="btn btn--light" href={href}>{buttonLabel}</a>
+        <a class="btn btn--outline-light" href={telHref}>Call {phoneDisplay}</a>
+      </div>
+      <p class="cta-band__phone">
+        {settings.responsePromise}
+        {settings.responsePromisePlaceholder && <span class="placeholder-mark"> [to confirm]</span>}
+      </p>
+    </div>
+  </div>
+</section>

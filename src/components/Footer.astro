@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import copy from '../data/copy.json';
+import { settings, phoneDisplay, telHref, mailHref, addressLines } from '../lib/site';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <p class="footer-brand">Adams <span class="amp">&amp;</span> Barford</p>
+        <p class="footer-blurb">{copy.footer.blurb}</p>
+      </div>
+
+      <div class="footer-contact">
+        <h2>Get in touch</h2>
+        <address>
+          {addressLines.map((line) => <>{line}<br /></>)}
+        </address>
+        <p class="mb-0"><a href={telHref}>{phoneDisplay}</a></p>
+        <p><a href={mailHref}>{settings.email}</a></p>
+        <p class="footer-areas">
+          {settings.hours}
+          {settings.hoursPlaceholder && <span class="placeholder-mark"> [to confirm]</span>}
+        </p>
+      </div>
+
+      <nav aria-label="Footer">
+        <h2>Services</h2>
+        <ul>
+          {services.map((s) => <li><a href={`/services/${s.id}/`}>{s.data.navLabel}</a></li>)}
+        </ul>
+      </nav>
+
+      <div>
+        <h2>Explore</h2>
+        <ul>
+          <li><a href="/our-work/">Our work</a></li>
+          <li><a href="/about/">About us</a></li>
+          <li><a href="/about/#how-we-work">How we work</a></li>
+          <li><a href="/about/#faqs">FAQs</a></li>
+          <li><a href="/areas/">Areas we cover</a></li>
+          <li><a href="/contact/">Start your project</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Where we work</h2>
+        <p class="footer-areas">{settings.areas.join(' · ')}</p>
+        <p><a href="/areas/">More about our area</a></p>
+      </div>
+    </div>
+
+    <div class="footer-small">
+      <p>© {year} {settings.legalName}. Company number and registered office <span class="placeholder-mark">[to confirm]</span>.</p>
+      <p><a href="/privacy/">Privacy notice</a></p>
+    </div>
+  </div>
+</footer>

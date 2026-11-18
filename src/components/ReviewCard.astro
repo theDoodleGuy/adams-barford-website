@@ -1,0 +1,20 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import DraftTag from './DraftTag.astro';
+
+interface Props { review: CollectionEntry<'reviews'>; serviceLabel?: string; }
+const { review, serviceLabel } = Astro.props;
+const { data } = review;
+const { Content } = await render(review);
+const stars = '★'.repeat(data.rating) + '☆'.repeat(5 - data.rating);
+---
+<figure class="review">
+  <p class="review__stars mb-0" role="img" aria-label={`Rated ${data.rating} out of 5`}>{stars}</p>
+  <blockquote><Content /></blockquote>
+  <figcaption>
+    <span><strong>{data.name}</strong>, {data.town}</span>
+    {serviceLabel && <span>· {serviceLabel}</span>}
+    <span>· {data.source === 'Direct' ? 'Sent to us directly' : `via ${data.source}`}</span>
+    {data.placeholder && <DraftTag />}
+  </figcaption>
+</figure>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import DraftTag from '../components/DraftTag.astro';
+import { settings, mailHref, phoneDisplay, telHref, addressLines } from '../lib/site';
+---
+<BaseLayout title="Privacy Notice | Adams & Barford" description="How Adams & Barford uses the details you send us through this website.">
+  <PageHero title="Privacy notice">
+    <p><DraftTag label="Placeholder: full notice to be written and checked before launch" /></p>
+  </PageHero>
+
+  <section class="section" style="padding-top: 0">
+    <div class="container prose">
+      <p>
+        This short notice explains how {settings.businessName} uses the information you give us through this website.
+        A full privacy notice, checked against UK GDPR, will replace it before the enquiry form goes live.
+      </p>
+      <h2>What we collect</h2>
+      <p>
+        When you send an enquiry we receive the details you type into the form: your name, contact details, the
+        property postcode and anything you tell us about your project.
+      </p>
+      <h2>How we use it</h2>
+      <p>
+        Only to reply to your enquiry and, if you go ahead, to quote for and carry out your project. We don't sell or
+        share your details for marketing, and we don't add you to a mailing list.
+      </p>
+      <h2>Cookies</h2>
+      <p>This website does not set any tracking or advertising cookies.</p>
+      <h2>How long we keep it</h2>
+      <p>Retention period to be confirmed.</p>
+      <h2>Your rights and how to contact us</h2>
+      <p>
+        You can ask to see, correct or delete the information we hold about you. Email
+        <a href={mailHref}>{settings.email}</a>, call <a href={telHref}>{phoneDisplay}</a> or write to us at
+        {addressLines.join(', ')}.
+      </p>
+      <p>
+        <strong>We will never ask you to change bank details by email.</strong> If you get an email that appears to be
+        from us asking you to pay into a new account, please call us before you pay.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

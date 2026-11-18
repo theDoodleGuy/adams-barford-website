@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Img from './Img.astro';
+import DraftTag from './DraftTag.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  serviceLabel?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+const { project, serviceLabel, headingLevel: H = 'h3' } = Astro.props;
+const { data } = project;
+---
+<article class="card" data-service={data.service}>
+  <div class="card__media">
+    <Img src={data.heroImage} alt={data.heroAlt} sizes="(min-width: 1200px) 380px, (min-width: 700px) 45vw, 100vw" widths={[400, 760]} />
+  </div>
+  {data.placeholder && <DraftTag class="card__tag-float" />}
+  <div class="card__body">
+    <p class="card__meta">
+      {serviceLabel && <span>{serviceLabel}</span>}
+      {serviceLabel && <span aria-hidden="true">·</span>}
+      <span>{data.town}</span>
+    </p>
+    <H class="card__title"><a href={`/our-work/${project.id}/`}>{data.title}</a></H>
+    <p class="card__text">{data.summary}</p>
+  </div>
+</article>
